@@ -31,7 +31,10 @@ ex8.2
 	values('IN615', '2019S1', 'shinrl1'); /* executed */
 
 	insert into Semester
-	values ('2018S1', 2018-02-02, 2018-06-06); /* executed */
+	values ('2018S1', 2018-02-02, 2018-06-06); /* executed but wrong date type! - deleted in 8.3*/
+
+	
+
 
 	insert into PaperInstance values ('IN610', '2018S1'); /* executed */
 
@@ -42,11 +45,54 @@ ex8.2
 
 	8.3 
 
-	insert into Semester values ('2021S1', 2021-02-02, 2021-06-06); /*executed */
+	insert into Semester values ('2021S1', 2021-02-02, 2021-06-06); /*executed but wrong date format - clean up in following delete statements*/
 
-	delete from Semester WHERE SemesterID = '2021S1', StartDate = 2021-02-02, EndDate = 2021-06-06;
+	delete from Semester WHERE SemesterID = '2021S1' and StartDate = 2021-02-02 and EndDate = 2021-06-06; /* executed - bad date type remooved */
+	
+	delete from Semester WHERE SemesterID = '2018S1' and StartDate = 2018-02-02 and EndDate = 2018-06-06; /* executed */
+	
+	insert into Semester values ('2021S1', '02-feb-2021', '06-june-2021'); /* executed */
+	
+	insert into Semester
+	values ('2018S1', '02-Feb-2018', '06-June-2018'); /* executed - correct date type inserted */
 
-	insert into Semester values ('2021S1', '02-feb-2021', '06-june-2021');
+	insert into PaperInstance
+	values ('IN510', '2021S1'); /* executed */
+
+
+	select * from PaperInstance;
+
+	insert PaperInstance(paperID, SemesterID)
+	select PaperID, Semester.SemesterID from Semester 
+	join PaperInstance on Semester.SemesterID = PaperInstance.SemesterID
+	where Semester.SemesterID = '2021S1';
 
 	
+	select * from Semester; /* I think I've lost the plot on this one */
+
+	8.4)
+
+	insert into PaperInstance values ('IN612', '2021S1'); /* executed */
+	delete from PaperInstance where PaperID = 'IN612' and SemesterID = '2021S1'; /* unexecuted */
+	select * from PaperInstance; /* please ignore workings*/
 	select * from Semester;
+
+	insert into Enrolment(PaperID, SemesterID, PersonID)
+	select PaperInstance.PaperID, Semester.SemesterID, Person.PersonID from Semester
+	join PaperInstance on Semester.SemesterID = PaperInstance.SemesterID
+	join Paper on PaperInstance.PaperID = Paper.PaperID 
+	join Enrolment on PaperInstance.PaperID = Enrolment.PaperID 
+	join Person on Person.PersonID = Enrolment.PersonID
+
+	where Semester.SemesterID = '2021S1' and Paper.PaperID = 'IN612' 
+	
+	select * from PaperInstance;
+
+	select * from Paper;
+
+	/* people enrolled in IN605 but not 612 */
+
+	select * from Enrolment full outer join PaperInstance on Enrolment.PaperID = PaperInstance.PaperID 
+	where Enrolment.PaperID = 'IN605' and Enrolment.PaperID != 'IN612';
+
+	select * from Enrolment;
