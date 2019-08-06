@@ -1,2 +1,2 @@
 # SQL
-SQL Exercises for DB#
+SQL Exercises for DB3
