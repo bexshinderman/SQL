@@ -90,9 +90,46 @@ ex8.2
 
 	select * from Paper;
 
-	/* people enrolled in IN605 but not 612 */
+	/* people enrolled in IN605 but not 612  */
 
-	select * from Enrolment full outer join PaperInstance on Enrolment.PaperID = PaperInstance.PaperID 
-	where Enrolment.PaperID = 'IN605' and Enrolment.PaperID != 'IN612';
+
+	insert into Enrolment(PaperID, SemesterID, PersonID)
+
+	select Enrolment.PaperID, Enrolment.SemesterID, Enrolment.PersonID
+	from Enrolment full outer join PaperInstance 
+	on Enrolment.PaperID = PaperInstance.PaperID 
+	where Enrolment.PaperID = 'IN605' and Enrolment.PaperID != 'IN612' 
+	and Enrolment.SemesterID = '2019S2'; 
+
+	select * from Enrolment where PaperID = 'IN238';
+
 
 	select * from Enrolment;
+	select * from Paper;
+
+	insert into Paper values('IN238', 'ExtraSpecialTopicInsert')
+
+	insert into PaperInstance values('IN238', '2021S2')
+
+		insert into Semester
+	values ('2021S2', '02-July-2018', '06-Dec-2018');
+
+
+	/* what am I missing? */
+	insert into Enrolment(PaperID, SemesterID, PersonID)
+	select 'IN238', '2021S1', IN605.PersonID from 
+	(
+	(select PaperID, SemesterID,PersonID from Enrolment  where PaperID = 'IN605' and SemesterID = '2019S2') IN605
+	left join (select PaperID, SemesterID, PersonID from Enrolment  where PaperID = 'IN612' and SemesterID = '2019S2') IN612
+	on IN605.PersonID = IN612.PersonID ) 
+
+	select * from Paper;
+	select * from PaperInstance;
+	select * from Semester;
+
+
+
+
+	
+
+
