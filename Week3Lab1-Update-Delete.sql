@@ -35,9 +35,14 @@ e9.3	Imagine a strange enrolment requirement regarding the students
 		from 2020S1 to 2019S2. Write a statement that will perform this enrolment change.
 
 	*/
+	insert into PaperInstance values('IN238', '2021S2'); /*executed */
+	select * from PaperInstance;
+	select * from Enrolment;
 
-update Enrolment set  SemesterID = '2019S2' where SemesterID = '2021S1';
-select * from Person where count(GivenName) < 12;
+	/* unfinished */
+	update Enrolment set SemesterID = '2019S2' select * from Enrolment e JOIN( Select len(FullName) from  Person) as sq where SemesterID = '2021S1' and PaperID = 'IN238'  
+
+update Enrolment set  SemesterID = '2019S2' where SemesterID = '2021S1' and PaperID = 'IN238' and FullName = (select * from Person where len(FullName) < 12 );
 
 	/*
 
@@ -47,8 +52,20 @@ Exercises for section 10 : DELETE
 
 e10.1	Write a statement to delete all enrolments for IN238 Extraspecial Topic in semester 2020S11.
 
+*/
+select * from Semester;
+insert into Semester values('2020S1', '02-Feb-2020', '06-June-2020'); /* executed */
+Select * from Paper; /* IN238 already in Paper table */
+select * from PaperInstance;
+insert into PaperInstance values('IN238', '2020S1'); /* executed */
+select * from Enrolment;
+insert into Enrolment values('IN238', '2020S1', 'shinrl1'); /* executed - adds to enrolment */
+delete from Enrolment where PaperID = 'IN238' and SemesterID = '2020S1'; /* executed - removes from enrolment */
+/*
 		
 
 e10.2	Delete all PaperInstances that have no enrolments.
 
+*/
+select * from Paper
 		
