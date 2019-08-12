@@ -12,7 +12,13 @@ select Paper.PaperID, Paper.PaperName, avg(PaperCount) as [Average Paper Count] 
 	( select PaperID, count(*) as PaperCount from Enrolment group by PaperID) 
 	as e 
 join Paper on e.PaperID = Paper.PaperID group by Paper.PaperID, Paper.PaperName;
-/*
+
+select Paper.PaperID, min(PaperCount) as MinCount from
+(select Paper.PaperID, Paper.PaperName, avg(PaperCount) as PaperCount from 
+	(select PaperID, count(*) as PaperCount from Enrolment group by PaperID) as e 
+join Paper on e.PaperID = Paper.PaperID GROUP By Paper.PaperID, Paper.PaperName) AS f 
+join Paper on f.PaperID = Paper.PaperID GROUP By Paper.PaperID 
+
 e6.2	List the paper with the highest average enrolment per instance. 
 	Display the paper ID, paper name and average enrolment count.
 */
@@ -29,13 +35,18 @@ e6.3	For each paper that has a paper instance: list the paper ID, paper name,
 e6.4	Which paper attracts people with long names? Find the background statistics 
 	to support a hypothesis test: for each paper with enrolments calculate the mean full name length, 
 	sample standard deviation full name length & sample size (that is: number of enrolments).
+	
 */
-
+select avg(length1), PersonID, FullName from (select len(FullName), PersonID as length1 from Person) as e JOIN Person on e.PersonID = Person.PersonID group by PersonID;
 /*
 e6.5	Rank the semesters from the most loaded (that is: the highest number of enrolments) to
 	the least loaded. Calculate the ordinal position (1 for first, 2 for second...) of the semester
 	in this ranking.
+*/
 
+select SemesterID, Max(count1) from (select semesterID, count(PersonID) as count1 from Enrolment) as e group by SemesterID;
+
+/*
 Exercises for section 7
 
 --Use UNION to solve these tasks. 
