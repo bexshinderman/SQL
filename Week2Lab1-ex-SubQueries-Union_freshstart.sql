@@ -7,8 +7,9 @@ e6.1	List the paper with the lowest average enrolment per instance. Ignore all p
 	Display the paper ID, paper name and average enrolment count.
 */
 
---average enrolment per paperID
-select
+--average enrolment per paperID  what is the best way to go about restricting the entries to only show minimum? obviously top isn't dynamic here
+select min(ae.AverageEnrolment) as MinimumAvgEnrolment, ae.PaperID from
+(select
 p.PaperID, --what is in select is in group by as we're using aggregates
 p.PaperName,
 avg(ec.EnrolmentCount) as AverageEnrolment
@@ -20,13 +21,30 @@ from
 	from Enrolment
 	group by PaperID, SemesterID) ec -- counts enrolments
 join Paper p on p.PaperID = ec.PaperID --this is what I was glitching over -I was trying to join Enrolment.PaperID instead of ec.PaperID in situations like this. The subselect already has that data!
-group by p.PaperID, p.PaperName
-
+group by p.PaperID, p.PaperName) ae -- average enrolments
+group by PaperID order by MinimumAvgEnrolment asc;
 
 /*
 e6.2	List the paper with the highest average enrolment per instance. 
 	Display the paper ID, paper name and average enrolment count.
 */
+select max(ae.AverageEnrolment) as MaximumAvgEnrolment, ae.PaperID, ae.PaperName  from
+(select
+p.PaperID, --what is in select is in group by as we're using aggregates
+p.PaperName,
+avg(ec.EnrolmentCount) as AverageEnrolment,
+max(ec.EnrolmentCount) as MaxEnrolment
+from
+	(select 
+	PaperID, -- again, what's in select is in group by
+	SemesterID,
+	count(*) as EnrolmentCount
+	from Enrolment
+	group by PaperID, SemesterID) ec -- counts enrolments
+join Paper p on p.PaperID = ec.PaperID --this is what I was glitching over -I was trying to join Enrolment.PaperID instead of ec.PaperID in situations like this. The subselect already has that data!
+group by p.PaperID, p.PaperName) ae
+group by ae.PaperID, ae.PaperName order by MaximumAvgEnrolment desc;
+
 
 /*
 e6.3	For each paper that has a paper instance: list the paper ID, paper name, 
@@ -68,8 +86,18 @@ group by p.PaperID, p.PaperName
 e6.4	Which paper attracts people with long names? Find the background statistics 
 	to support a hypothesis test: for each paper with enrolments calculate the mean full name length, 
 	sample standard deviation full name length & sample size (that is: number of enrolments).
-*/
 
+	
+*/
+select nl.FullName, avg(nl.NameLength) as AverageLength, stdev(nl.NameLength) as StandardDeviation, count(e.PersonID) as SampleSize from (select
+GivenName,
+FamilyName,
+FullName,
+PersonID,
+len(FullName)-1 as NameLength 
+from Person) nl
+join Enrolment e on e.PersonID = nl.PersonID
+group by nl.FullName
 /*
 e6.5	Rank the semesters from the most loaded (that is: the highest number of enrolments) to
 	the least loaded. Calculate the ordinal position (1 for first, 2 for second...) of the semester
