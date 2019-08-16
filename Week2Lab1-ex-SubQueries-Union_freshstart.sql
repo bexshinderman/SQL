@@ -102,7 +102,40 @@ group by nl.FullName
 e6.5	Rank the semesters from the most loaded (that is: the highest number of enrolments) to
 	the least loaded. Calculate the ordinal position (1 for first, 2 for second...) of the semester
 	in this ranking.
+	*/
 
+	--setting up unrealistic date for easy deskchecking 
+	
+	insert into Semester values('2030', '03-Feb-2030', '09-Dec-3030'); --executed
+	update Semester set SemesterID = '2030S1' where SemesterID = '2030'; --whoops quick clean up
+	select * from Semester;
+	insert into PaperInstance values('IN238', '2030S1'); --executed
+	select * from PaperInstance;
+	insert into Enrolment values('IN238', '2030S1', 'shinrl1'); --executed
+	Select * from Enrolment;
+	select * from Semester join Enrolment on Semester.SemesterID = Enrolment.SemesterID;
+
+	-- answer ^_^
+
+	select  max(ec.StartDate)
+	PaperID, ec.SemesterID, ec.StartDate, ec.EnrolmentCount
+	from(
+		select
+		PaperID,
+		Enrolment.SemesterID,
+		Semester.StartDate,
+		count(*) as EnrolmentCount
+		from Enrolment
+		join Semester on Enrolment.SemesterID = Semester.SemesterID
+		group by PaperID, Enrolment.SemesterID, Semester.StartDate
+		) ec
+	join
+	Semester on Semester.SemesterID  = ec.SemesterID
+	group by ec.EnrolmentCount, ec.SemesterID, ec.StartDate order by ec.EnrolmentCount desc; 
+
+
+	
+	/*
 Exercises for section 7
 
 --Use UNION to solve these tasks. 
