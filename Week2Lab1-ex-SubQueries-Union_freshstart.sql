@@ -147,8 +147,14 @@ e7.1	In one result, list all the people who enrolled in a paper delivered during
 	The result should have three columns: PersonID, Full Name and the reason the person
 	is on the list - either 'enrolled in 2019' or 'enrolled in IN605'
 
+	*/
+	select * from Enrolment;
+	select personID as pID from Enrolment where Enrolment.SemesterID = '2019S2' and Enrolment.PaperID = 'IN605' UNION select FullName as fN from Person 
+	/*
+
 e7.2	Produce one resultset with two columns. List the all Paper Names and all the Person Full Names in one column.
 	In the other column calculate the number of characters in the name.
 	Sort the result with the longest name first.
 
 */
+
