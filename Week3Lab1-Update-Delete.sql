@@ -14,7 +14,9 @@ e9.1	Change the name of IN628 to 'Object-Oriented Software Development (disconti
 
 */ 
 select * from Paper;
-update Paper set PaperName = 'Object-Oriented Software Development (discontinued after 2019)' WHERE PaperID = 'IN628' /* executed */
+update Paper 
+set PaperName = 'Object-Oriented Software Development (discontinued after 2019)' 
+where PaperID = 'IN628' /* executed */
 
 /*
 
@@ -23,7 +25,8 @@ e9.2	For all the semesters that start after 01-June-2018, alter the end date
 		*/
 
 select * from Semester;
-update Semester set StartDate = DATEADD(week, 2, '01-June-2018')
+update Semester
+set StartDate = DATEADD(week, 2, '01-June-2018')
 where StartDate > '01-June-2018';
 
 		/*
@@ -40,10 +43,19 @@ e9.3	Imagine a strange enrolment requirement regarding the students
 	select * from Enrolment;
 
 	/* unfinished */
-	update Enrolment set SemesterID = '2019S2' select * from Enrolment e JOIN( Select len(FullName) from  Person) as sq where SemesterID = '2021S1' and PaperID = 'IN238'  
 
-update Enrolment set  SemesterID = '2019S2' where SemesterID = '2021S1' and PaperID = 'IN238' and FullName = (select * from Person where len(FullName) < 12 );
+	select * from Enrolment;
+	Select * from Person;
 
+	update Enrolment 
+	set SemesterID = '2019S2' 
+	from Enrolment
+	join Person on Person.PersonID = Enrolment.PersonID
+	where SemesterID = '2021S1' 
+	and PaperID = 'IN238' 
+	and len(FullName) < 12 
+	
+	
 	/*
 
 Exercises for section 10 : DELETE
@@ -67,5 +79,12 @@ delete from Enrolment where PaperID = 'IN238' and SemesterID = '2020S1'; /* exec
 e10.2	Delete all PaperInstances that have no enrolments.
 
 */
-select * from Paper
+delete PaperInstance from
+--select * from
+PaperInstance 
+full outer join Enrolment 
+on PaperInstance.PaperID = Enrolment.PaperID 
+where Enrolment.PaperID is null; /* executed */
+
+select * from PaperInstance
 		
