@@ -14,7 +14,7 @@ Exercises for section 11 : TRIGGER
 			constraint [fk_password_person] foreign key (PersonID) references Person (PersonID) 	
 			on delete cascade on update cascade 			
 			)
-
+			
 		insert Person (PersonID, GivenName, FamilyName, FullName)
 		values ('122', 'Krissi', 'Wood', 'Krissi Wood')
 
@@ -27,12 +27,30 @@ Exercises for section 11 : TRIGGER
 			WithdrawnDateTime datetime not null default getdate()
 			constraint [pk_withdrawn] primary key (PaperID, SemesterID, PersonID)
 			)
+			
 
 
 e11.1		Create a trigger that reacts to new records on the Person table. 
 			The trigger creates new related records on the Password table, automatically creating passwords.
 
+		*/
+
+		alter trigger newRecord on Person 
+		after insert
+		as 
+		begin
+		insert Password (PersonID, pwd)
+		select PersonID, pwd from Password
+		end
+
+		go
+		select * from person;
 		
+		insert Password values('shinrl1', 'Pass');
+
+		go
+		select * from Password;
+
 		
 
 e11.2		Create a trigger that reacts to new paper instances
