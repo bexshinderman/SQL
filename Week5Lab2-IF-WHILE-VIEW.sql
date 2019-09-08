@@ -9,6 +9,35 @@ Exercises for Section 15
 		with the most enrolments. Show the paperID, paper name,
 		semesterID, start date and end date of the paper instance.
 
+		DECLARE @topten = 
+	create view BigPaperInstance
+	select * from PaperInstance pI 
+	join Paper p on pI.PaperID = p.PaperID 
+	join Semester s on s.SemesterID = pI.semesterID
+	where 
+*/
+create view BigPaperInstance
+as
+select * from (
+	select top 10 max(tp.Counting) as [Enrolment Count per Paper], PaperID from
+		(select p.PaperID, 
+		p.PaperName, max(ec.EnrolmentCount) as Counting from
+			(select PaperID, SemesterID, count(*) as EnrolmentCount
+			from Enrolment
+			group by PaperID, SemesterID) ec
+		join Paper p on ec.PaperID = p.PaperID
+		group by p.PaperName, p.PaperID) tp
+	group by tp.Counting, tp.PaperID);
+
+select * from BigPaperInstance
+
+/* fnd out what's up with views */
+
+	select max(ae.AverageEnrolment) as MaximumAvgEnrolment, ae.PaperID, ae.PaperName  from
+
+
+
+
 
 
 15.2    Develop a view [SmallPaper] that finds the 10 paper instances
@@ -18,7 +47,14 @@ Exercises for Section 15
 
 15.3	Write a view that lists all the current first year students
 
+create view FirstYears
+as
+select * from Enrolment 
+/*join Paper on Enrolment.PaperID = Paper.PaperID what is going on
+with views and joins argg! */
+where LEFT(Enrolment.PaperID, 3) = 'IN5' ;
 
+select * from FirstYears;
 ***************************************************************************************
 
 		You can reference a Database table even if you are not 
