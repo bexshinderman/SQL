@@ -14,6 +14,8 @@ Create table Supplier (
 SupplierID int primary key identity,
 SupplierGST int );
 
+drop table Component
+
 create table Component (
 ComponentID int primary key identity,
 ComponentName varchar(200),
@@ -23,6 +25,8 @@ ListPrice money,
 TimeToFit varchar(50),
 CategoryID int foreign key references Contact(ContactID),
 SupplierID int foreign key references Supplier(SupplierID)
+on update cascade
+on delete cascade
 );
 
 create table Category (
@@ -30,10 +34,35 @@ CategoryID int primary key identity,
 CategoryName varchar(100)
 );
 
+drop table AssemblySubcomponent
+
 create table AssemblySubcomponent (
-AssemblyID int primary key identity not null,
+AssemblyID int not null,
 SubcomponentID int not null,
-Quantity int not null
+Quantity decimal(18,4) not null
+constraint DF_Assemblusub_Quantity
+default 0,
+
+constraint PK_AssemblySubcomponent
+primary key (AssemblyID, SubcomponentID),
+
+constraint CK_AssemblySubComponent_Components_Different
+	check (AssemblyID != SubcomponentID),
+constraint CK_AssemblySubcomponent_Qauntity
+	check (Quantity >= 0),
+
+constraint FK_AssemblyComponent_Assembly
+foreign key (AssemblyID)
+references Component (ComponentID),
+-- on update cascade 
+-- on delete no action,
+
+constraint FK_AssemblySubcomponent_Subcomponent
+foreign key (SubcomponentID)
+references Component (ComponentID)
+-- on update cascade
+-- on delete no action
+
 );
 
 create table Customer (
@@ -48,6 +77,7 @@ QouteCompiler varchar(100),
 CustomerID int foreign key references Customer(CustomerID)
 );
 
+drop table QouteComponent
 create table QouteComponent (
 ComponentID int foreign key references Component(ComponentID),
 QouteID int foreign key references Qoute(QouteID),
