@@ -1,3 +1,4 @@
+--EXECUTED 1
 Create table Contact (
 ContactID int identity not null,
 ContactName varchar (100) not null,
@@ -18,22 +19,22 @@ primary key (ContactID)
 --drop table Contact;
 
 --drop table Supplier;
-
+--executed 2nd
 Create table Supplier (
-SupplierID int identity not null,
+SupplierID int not null,
 SupplierGST int not null,
 
 constraint PK_Supplier
-primary key(SupplierID),
+primary key (SupplierID),
 
 constraint FK_Supplier
-foreign key (SupplierID) references Component (SupplierID)
+foreign key (SupplierID) references Contact (ContactID)
 on delete no action
 on update cascade
  
  );
 
---drop table Component
+--drop table Component executed 3rd
 
 create table Component (
 ComponentID int identity not null,
@@ -50,7 +51,7 @@ primary key(ComponentID),
 
 constraint FK_component_CategoryID
 foreign key (CategoryID) references Category (CategoryID)
-on delete cascade --in krissy's notes it's no action, why?
+on delete cascade
 on update cascade,
 
 constraint FK_component_SupplierID
@@ -61,7 +62,8 @@ on update cascade
 
 --drop table Category;
 
-create table Category (
+create table Category --4th 
+(
 CategoryID int not null,
 CategoryName varchar(100) not null,
 
@@ -103,13 +105,13 @@ on delete no action
 
 --drop table Customer;
 create table Customer (
-CustomerID int identity not null
+CustomerID int not null
 
 constraint PK_Customer
 primary key(CustomerID),
 
 constraint FK_CustomerID
-foreign key (CustomerID) references Qoute (CustomerID)
+foreign key (CustomerID) references Contact (ContactID)
 on delete cascade
 on update cascade
 
@@ -134,9 +136,9 @@ on update cascade
 
 ); --requires Customer table
 
-drop table QouteComponent
+--drop table QouteComponent
 create table QouteComponent (
-ComponentID int identity not null,
+ComponentID int not null,
 QouteID int not null ,
 Quantity int not null,
 TradePrice money not null,
@@ -152,7 +154,7 @@ on delete no action
 on update cascade,
 
 constraint FK_QouteComponent_QouteID
-foreign key (QouteID) references Component (QouteID)
+foreign key (QouteID) references Qoute (QouteID)
 on delete cascade
 on update cascade
 ); --requires component
