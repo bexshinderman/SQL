@@ -13,6 +13,17 @@ you must have implemented the database as specified on the assignment ERD
 
 --support functions, views and sp
 --create function dbo.getCategoryID
+create dbo.GetCategoryID(@CategoryName nvarchar(100))
+{
+returns int
+as
+begin
+return (select top 1 CategoryID from Category where CategoryName = @CategoryName)
+end
+go
+}
+
+
 --create function dbo.getAssemblySupplierID()
 --create proc addSubComponent
 -- Using variables : @ABC int, @XYZ int, @CDBD int, @BITManf int- capture the ContactID
@@ -28,11 +39,10 @@ insert Category (CategoryName) values ('Labour')
 --create contacts
 --Using variables : @ABC int, @XYZ int, @CDBD int, @BITManf int- capture the ContactID
 -- This will mean you don't have to hard code these later.
-
+declare @ABC int, @XYZ int, @CDBD int, @BITManf int --capture the ContactID
 insert Contact (ContactName, ContactPostalAddress, ContactWWW, ContactEmail, ContactPhone, ContactFax)
 values ('ABC Ltd.', '17 George Street, Dunedin', 'www.abc.co.nz', 'info@abc.co.nz', '	471 2345', null)
-
-
+select @ABC = @@identity 
 insert Contact (ContactName, ContactPostalAddress, ContactWWW, ContactEmail, ContactPhone, ContactFax)
 values ('XYZ Ltd.', '23 Princes Street, Dunedin', null, 'xyz@paradise.net.nz', '4798765', '4798760')
 
@@ -48,7 +58,8 @@ values ('BIT Manufacturing Ltd.', 'Forth Street, Dunedin', 'bitmanf.tekotago.ac.
 -- create components
 -- Note this script relies on you having captured the ContactID to insert into SupplierID
 
-insert Component (ComponentID, ComponentName, ComponentDescription, SupplierID, ListPrice, TradePrice, TimeToFit, CategoryID)
+ set identity_insert Component on
+Component (ComponentID, ComponentName, ComponentDescription, SupplierID, ListPrice, TradePrice, TimeToFit, CategoryID)
 values (30901, 'BMS10', '10mm M6 ms bolt', @ABC, 0.20, 0.17, 0.5, dbo.getCategoryID('Fixings'))
 insert Component (ComponentID, ComponentName, ComponentDescription, SupplierID, ListPrice, TradePrice, TimeToFit, CategoryID)
 values (30902, 'BMS12', '12mm M6 ms bolt', @ABC, 0.25, 0.2125,	0.5, dbo.getCategoryID('Fixings'))
@@ -80,7 +91,7 @@ insert Component (ComponentID, ComponentName, ComponentDescription, SupplierID, 
 values (30922, 'DESLAB', 'Designer labour', @BITManf, 54.00, 54.00, 0, dbo.getCategoryID('Labour'))
 insert Component (ComponentID, ComponentName, ComponentDescription, SupplierID, ListPrice, TradePrice, TimeToFit, CategoryID)
 values (30923, 'APPLAB', 'Apprentice labour', @BITManf, 23.50, 23.50, 0, dbo.getCategoryID('Labour'))
-
+-- set identity_insert Component off
 
 /*
 --create assemblies
