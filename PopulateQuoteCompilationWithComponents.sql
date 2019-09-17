@@ -13,16 +13,18 @@ you must have implemented the database as specified on the assignment ERD
 
 --support functions, views and sp
 --create function dbo.getCategoryID
-create dbo.GetCategoryID(@CategoryName nvarchar(100))
-{
+
+create function dbo.GetCategoryID( @CategoryName nvarchar(100) )
 returns int
 as
 begin
 return (select top 1 CategoryID from Category where CategoryName = @CategoryName)
 end
 go
-}
 
+
+
+--create function dbo.getAssemblySupplierID()
 
 --create function dbo.getAssemblySupplierID()
 --create proc addSubComponent
@@ -58,8 +60,8 @@ values ('BIT Manufacturing Ltd.', 'Forth Street, Dunedin', 'bitmanf.tekotago.ac.
 -- create components
 -- Note this script relies on you having captured the ContactID to insert into SupplierID
 
- set identity_insert Component on
-Component (ComponentID, ComponentName, ComponentDescription, SupplierID, ListPrice, TradePrice, TimeToFit, CategoryID)
+set identity_insert Component on
+insert Component (ComponentID, ComponentName, ComponentDescription, SupplierID, ListPrice, TradePrice, TimeToFit, CategoryID)
 values (30901, 'BMS10', '10mm M6 ms bolt', @ABC, 0.20, 0.17, 0.5, dbo.getCategoryID('Fixings'))
 insert Component (ComponentID, ComponentName, ComponentDescription, SupplierID, ListPrice, TradePrice, TimeToFit, CategoryID)
 values (30902, 'BMS12', '12mm M6 ms bolt', @ABC, 0.25, 0.2125,	0.5, dbo.getCategoryID('Fixings'))

@@ -64,7 +64,7 @@ on update cascade
 
 create table Category --4th 
 (
-CategoryID int not null,
+CategoryID int,
 CategoryName varchar(100) not null,
 
 constraint PK_Category
@@ -91,15 +91,15 @@ constraint AssemblySubcomponent_greaterthan0
 
 constraint FK_AssemblyComponent_Assembly
 foreign key (AssemblyID)
-references Component (ComponentID)
-on update cascade 
-on delete no action,
+references Component (ComponentID),
+--on update cascade 
+--on delete no action
 
 constraint FK_AssemblySubcomponent_Subcomponent
 foreign key (SubcomponentID)
 references Component (ComponentID)
-on update cascade
-on delete no action
+--on update cascade
+--on delete no action
 
 ); --requires component table
 
@@ -149,14 +149,14 @@ constraint PK_QouteComponent
 primary key (ComponentID, QouteID),
 
 constraint FK_QouteComponent_ComponentID
-foreign key (ComponentID) references Component (ComponentID)
-on delete no action
-on update cascade,
+foreign key (ComponentID) references Component (ComponentID),
+--on delete no action
+--on update cascade
 
 constraint FK_QouteComponent_QouteID
 foreign key (QouteID) references Qoute (QouteID)
-on delete cascade
-on update cascade
+--on delete cascade
+--on update cascade
 ); --requires component
 
 
