@@ -14,6 +14,9 @@ you must have implemented the database as specified on the assignment ERD
 --support functions, views and sp
 --create function dbo.getCategoryID
 
+--drop function GetCategoryID;
+--drop function dbo.GetCategoryID()
+--drop function dbo.GetCategoryID( @CategoryName nvarchar(100));
 create function dbo.GetCategoryID( @CategoryName nvarchar(100) )
 returns int
 as
@@ -23,15 +26,34 @@ end
 go
 
 
+--drop function dbo.getAssemblySupplierID()
+create function dbo.getAssemblySupplierID()
+returns int
+as
+begin
+return (select ContactID from Contact where ContactName = 'BIT Manufacturing')
+end
+go
 
---create function dbo.getAssemblySupplierID()
+--drop procedure createAssembly;
 
---create function dbo.getAssemblySupplierID()
---create proc addSubComponent
--- Using variables : @ABC int, @XYZ int, @CDBD int, @BITManf int- capture the ContactID
+create procedure createAssembly(@componentName varchar(200),@componentDescription varchar(500)) 
+as
+insert Component( ComponentName, ComponentDescription, TradePrice, ListPrice, TimeToFit, CategoryID, SupplierID)
+values (@componentName, @componentDescription, 0, 0, 0, dbo.GetCategoryID('Assembly'), dbo.getAssemblySupplierID())
+go
+
+--drop proc addSubComponent
+create procedure AddSubComponent(@assemblyName int, @subComponentName int, @quantity decimal(18,4))
+as
+insert AssemblySubcomponent(AssemblyID, SubcomponentID, Quantity) 
+values (@assemblyName, @subComponentName, @quantity)
+go
+
+--declare @ABC int, @XYZ int, @CDBD int, @BITManf int
 
 --create categories
-insert Category (CategoryName) values ('Black Steel')
+ 
 insert Category (CategoryName) values ('Assembly')
 insert Category (CategoryName) values ('Fixings')
 insert Category (CategoryName) values ('Paint')
@@ -47,11 +69,11 @@ values ('ABC Ltd.', '17 George Street, Dunedin', 'www.abc.co.nz', 'info@abc.co.n
 select @ABC = @@identity 
 insert Contact (ContactName, ContactPostalAddress, ContactWWW, ContactEmail, ContactPhone, ContactFax)
 values ('XYZ Ltd.', '23 Princes Street, Dunedin', null, 'xyz@paradise.net.nz', '4798765', '4798760')
-
+select @XYZ = @@identity
 
 insert Contact (ContactName, ContactPostalAddress, ContactWWW, ContactEmail, ContactPhone, ContactFax)
 values ('CDBD Pty Ltd.',	'Lot 27, Kangaroo Estate, Bondi, NSW, Australia 2026', '	www.cdbd.com.au', 'support@cdbd.com.au', '+61 (2) 9130 1234', null)
-
+select @CDBD = @@identity
 
 insert Contact (ContactName, ContactPostalAddress, ContactWWW, ContactEmail, ContactPhone, ContactFax)
 values ('BIT Manufacturing Ltd.', 'Forth Street, Dunedin', 'bitmanf.tekotago.ac.nz', 'bitmanf@tekotago.ac.nz', '0800 SMARTMOVE', null)
