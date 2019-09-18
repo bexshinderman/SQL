@@ -53,7 +53,7 @@ go
 --declare @ABC int, @XYZ int, @CDBD int, @BITManf int
 
 --create categories
- 
+ set identity_insert Category on /* ERROR CENTRAL GET YOUR TICKETS HERE */
 insert Category (CategoryName) values ('Assembly')
 insert Category (CategoryName) values ('Fixings')
 insert Category (CategoryName) values ('Paint')

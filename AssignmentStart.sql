@@ -34,7 +34,17 @@ on update cascade
  
  );
 
---drop table Component executed 3rd
+
+create table Category --3rd
+(
+CategoryID int identity,
+CategoryName varchar(100) not null,
+
+constraint PK_Category
+primary key (CategoryID)
+); --exists
+
+--drop table Component executed 4th
 
 create table Component (
 ComponentID int identity not null,
@@ -62,20 +72,13 @@ on update cascade
 
 --drop table Category;
 
-create table Category --4th 
-(
-CategoryID int,
-CategoryName varchar(100) not null,
 
-constraint PK_Category
-primary key (CategoryID)
-); --exists
 
 drop table AssemblySubcomponent
 
 create table AssemblySubcomponent (
 AssemblyID int not null,
-SubcomponentID int not null,
+SubcomponentID int  not null,
 Quantity decimal(18,4) not null
 
 constraint DF_Assemblysub_Quantity
