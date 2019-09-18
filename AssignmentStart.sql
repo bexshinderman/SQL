@@ -1,4 +1,7 @@
 --EXECUTED 1
+
+
+
 Create table Contact (
 ContactID int identity not null,
 ContactName varchar (100) not null,
@@ -21,7 +24,7 @@ primary key (ContactID)
 --drop table Supplier;
 --executed 2nd
 Create table Supplier (
-SupplierID int not null,
+SupplierID int,
 SupplierGST int not null,
 
 constraint PK_Supplier
@@ -37,7 +40,7 @@ on update cascade
 
 create table Category --3rd
 (
-CategoryID int identity,
+CategoryID int identity(2000,20),
 CategoryName varchar(100) not null,
 
 constraint PK_Category
@@ -47,14 +50,14 @@ primary key (CategoryID)
 --drop table Component executed 4th
 
 create table Component (
-ComponentID int identity not null,
+ComponentID int identity(1,1) not null,
 ComponentName varchar(200) not null,
 ComponentDescription varchar(500) not null,
 TradePrice money not null,
 ListPrice money not null,
 TimeToFit decimal(20,4) not null,
-CategoryID int not null,
-SupplierID int not null,
+CategoryID int ,
+SupplierID int,
 
 constraint PK_Component
 primary key(ComponentID),
@@ -74,7 +77,7 @@ on update cascade
 
 
 
-drop table AssemblySubcomponent
+--drop table AssemblySubcomponent
 
 create table AssemblySubcomponent (
 AssemblyID int not null,

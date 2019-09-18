@@ -17,6 +17,11 @@ you must have implemented the database as specified on the assignment ERD
 --drop function GetCategoryID;
 --drop function dbo.GetCategoryID()
 --drop function dbo.GetCategoryID( @CategoryName nvarchar(100));
+
+
+
+go
+
 create function dbo.GetCategoryID( @CategoryName nvarchar(100) )
 returns int
 as
@@ -44,16 +49,18 @@ values (@componentName, @componentDescription, 0, 0, 0, dbo.GetCategoryID('Assem
 go
 
 --drop proc addSubComponent
-create procedure AddSubComponent(@assemblyName int, @subComponentName int, @quantity decimal(18,4))
+create or alter procedure AddSubComponent(@assemblyName varchar(100), @subComponentName varchar(100), @quantity decimal(18,4))
 as
-insert AssemblySubcomponent(AssemblyID, SubcomponentID, Quantity) 
-values (@assemblyName, @subComponentName, @quantity)
+insert into AssemblySubcomponent(AssemblyID, SubcomponentID, Quantity) 
+select C1.ComponentID, C2.ComponentID, @Quantity 
+from Component as C1 cross join Component C2 
+where C1.componentName = @assemblyName and C2.ComponentName = @subComponentName
 go
 
 --declare @ABC int, @XYZ int, @CDBD int, @BITManf int
 
 --create categories
- set identity_insert Category on /* ERROR CENTRAL GET YOUR TICKETS HERE */
+ /*set identity_insert Category off ERROR CENTRAL  */
 insert Category (CategoryName) values ('Assembly')
 insert Category (CategoryName) values ('Fixings')
 insert Category (CategoryName) values ('Paint')
@@ -78,6 +85,10 @@ select @CDBD = @@identity
 insert Contact (ContactName, ContactPostalAddress, ContactWWW, ContactEmail, ContactPhone, ContactFax)
 values ('BIT Manufacturing Ltd.', 'Forth Street, Dunedin', 'bitmanf.tekotago.ac.nz', 'bitmanf@tekotago.ac.nz', '0800 SMARTMOVE', null)
 
+insert Supplier(SupplierID, SupplierGST) 
+select ContactID, 15 
+ from Contact
+ where ContactID not in (select SupplierID from Supplier)
 
 -- create components
 -- Note this script relies on you having captured the ContactID to insert into SupplierID
@@ -115,7 +126,7 @@ insert Component (ComponentID, ComponentName, ComponentDescription, SupplierID, 
 values (30922, 'DESLAB', 'Designer labour', @BITManf, 54.00, 54.00, 0, dbo.getCategoryID('Labour'))
 insert Component (ComponentID, ComponentName, ComponentDescription, SupplierID, ListPrice, TradePrice, TimeToFit, CategoryID)
 values (30923, 'APPLAB', 'Apprentice labour', @BITManf, 23.50, 23.50, 0, dbo.getCategoryID('Labour'))
--- set identity_insert Component off
+set identity_insert Component off
 
 /*
 --create assemblies
