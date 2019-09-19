@@ -1,3 +1,5 @@
+/* Question 1 */
+
 alter proc createCustomer( @CustomerID int output,
 							@Name varchar(100), 
 							@Phone varchar(30),
