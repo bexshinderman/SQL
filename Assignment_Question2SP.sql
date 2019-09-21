@@ -27,6 +27,6 @@ insert into QouteComponent(ComponentID, QouteID, Quantity, TradePrice, ListPrice
 values ( @ComponentID, @QouteID, @Quantity, 
 'select TradePrice from Component where ComponentID = @ComponentID', 
 'select ListPrice from Component where ComponentID = @ComponentID' ,
-'select TradePrice from Component where TimeToFit = @ComponentID') -- how do I make these execute??
+'select TradePrice from Component where ComponentID = @ComponentID') -- how do I make these execute??
 go 
 exec addQouteComponent @QouteID = 32, @ComponentID =3091, @Quantity = 100; -- returns "Cannot convert a char value to money"
