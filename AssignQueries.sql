@@ -15,14 +15,15 @@ insert Contact (ContactID, ContactName, ContactPhone, ContactFax,
 				ContactMobilePhone, ContactEmail, ContactWWW, ContactPostalAddress)
 values (@CustomerID, @Name, @Phone, @Fax, @MobilePhone, @Email, @WWW, @PostalAddress)
 insert Customer(CustomerID) values (@CustomerID)
-print @ContactID;
+select @ContactID as ContactID;
 
 go
 
 set identity_insert Contact on
-exec createCustomer @CustomerID='25' , @Name='Bex Shinderman1', @Phone ='0210000000', @Email='bex.shinderman@gmail.com',@PostalAddress= '42 Stardew Valley'
+exec createCustomer @CustomerID='34' , @Name='Bex Shinderman21', @Phone ='0210000000', @Email='bex.shinderman@gmail.com',@PostalAddress= '42 Stardew Valley'
 
 go
+
 
 select * from Customer;
 select * from Contact;
