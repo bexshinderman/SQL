@@ -17,7 +17,33 @@ set identity_insert Qoute on --testing first sp
 exec createQoute @QouteID = 32, @QouteDescription = 'i am a description',@QouteDate = null, @QoutePrice = '$4', @QouteCompiler = 'Jenifer', @CustomerID = '22';
 --adds to Qoute table as intended
 end
+
+
+alter proc addQouteComponent(@ComponentID int,@QouteID int, @Quantity int, @TimeToFit time)
+as -- because timetofit was a decimal and one data type I decided to forfit obtaining TimeToFit dynamically and thus added @TimeToFit as an input parameter.
+declare @ComponentID2 int
+set @ComponentID2 = @ComponentID
+declare @TradePrice2 money
+set @TradePrice2 = (select TradePrice from Component where ComponentID = @ComponentID2 )
+declare @ListPrice2 money
+set @ListPrice2 = (select ListPrice from Component where ComponentID = @ComponentID2) 
+insert into  QouteComponent (ComponentID, QouteID, Quantity, TradePrice, ListPrice, TimeToFit)
+values (@ComponentID, @QouteID, @Quantity, @TradePrice2, @ListPrice2, @TimeToFit) 
+go 
+
+
+set identity_insert Qoute on --testing first sp
+exec createQoute @QouteID = 33, @QouteDescription = 'testing' , @QoutePrice = '$4', @QouteCompiler = 'Jenifer', @CustomerID = '23';
+exec addQouteComponent  @ComponentID =30906, @QouteID = 33, @Quantity = 100, @TimeToFit = '1:00'; 
+
+select * from Qoute
+select * from QouteComponent
+select * from Component
+
+
+
 --helper functions for second sp
+/* helper functions nolonger in use
 create function dbo.getTradePrice(@ComponentID2 int)
 returns money
 as
@@ -46,21 +72,7 @@ return (select TimeToFit from Component where ComponentID = @ComponentID2  )
 end
 go
 select * from component
-select dbo.getTimeToFit(30901)
+select dbo.getTimeToFit(30901) */
 
 
 
-alter proc addQouteComponent(@ComponentID int,@QouteID int, @Quantity int, @TimeToFit time)
-as
-declare @ComponentID2 int
-set @ComponentID2 = @ComponentID
-declare @TradePrice2 money
-set @TradePrice2 = (select TradePrice from Component where ComponentID = @ComponentID2 )
-declare @ListPrice2 money
-set @ListPrice2 = (select ListPrice from Component where ComponentID = @ComponentID2) 
-insert into  QouteComponent (ComponentID, QouteID, Quantity, TradePrice, ListPrice, TimeToFit)
-values (@ComponentID, @QouteID, @Quantity, @TradePrice2, @ListPrice2, @TimeToFit) 
-go 
-exec addQouteComponent  @ComponentID =30911, @QouteID = 32, @Quantity = 100, @TimeToFit = '1:00'; -- returns "Cannot convert a char value to money"
-
-select * from QouteComponent;
