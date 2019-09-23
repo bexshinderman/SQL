@@ -84,14 +84,21 @@ select * from Qoute;
 
 go
 
-Create Trigger trd_delete On Supplier
-Instead of Delete As
-  Begin
+
+alter Trigger trd_delete On Supplier
+instead of delete
+as
+--declare @SupplierName varchar(100)
+--set @SupplierName = (Select ContactName from Contact c Join Supplier s on (s.SupplierID = c.ContactID) where s.SupplierID = c.ContactID)
+
+declare @SupplierName varchar(100)  = (Select ContactName from Contact c join deleted d on c.ContactID = d.SupplierID)
   declare @Counts int
   set @Counts = (select count(Component.SupplierID) as [Count in Component] from Supplier left join Component on (Supplier.SupplierID = Component.SupplierID) )
-    RaisError('You cannot delete this supplier. @XYZ has @Count related components' 16, 1);
-  End
+  if (@Counts > 0) 
+  raiserror( 'You cannot delete this supplier. %s has %i number of related components', 16, 1,  @SupplierName, @Counts)
+  
+ 
 
-  delete from Supplier where SupplierID = 1
- select * from supplier;
+  delete from Supplier where SupplierID = 5
+ select * from Supplier;
  select * from Component;
