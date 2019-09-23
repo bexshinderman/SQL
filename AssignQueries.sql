@@ -63,13 +63,13 @@ go
 
 
 set identity_insert Contact on
-exec createCustomer @CustomerID='106' , @Name='Bimble & Hat', @Phone ='4445555', @Email='guy..little@bh.biz.nz',@PostalAddress= '123 digit st Dunedin'
+exec createCustomer @CustomerID='109' , @Name='Bimble & Hat', @Phone ='4445555', @Email='guy..little@bh.biz.nz',@PostalAddress= '123 digit st Dunedin'
 set identity_insert Contact off
 go
 --identity k 
 set identity_insert Qoute on 
-exec createQoute @QouteID = 545, @QouteDescription = 'testing' , @QoutePrice = '$4', @QouteCompiler = 'Jenifer', @CustomerID = '104';
-exec addQouteComponent  @ComponentID =30906, @QouteID = 545, @Quantity = 100; 
+exec createQoute @QouteID = 535, @QouteDescription = 'testing' , @QoutePrice = '$4', @QouteCompiler = 'Jenifer', @CustomerID = '104';
+exec addQouteComponent  @ComponentID =30903, @QouteID = 535, @Quantity = 100; 
 set identity_insert Qoute off
 
 
@@ -78,3 +78,20 @@ select * from Customer;
 select * from QouteComponent
 select * from Qoute;
 
+
+
+/*question 5 trigsupplierdelete */
+
+go
+
+Create Trigger trd_delete On Supplier
+Instead of Delete As
+  Begin
+  declare @Counts int
+  set @Counts = (select count(Component.SupplierID) as [Count in Component] from Supplier left join Component on (Supplier.SupplierID = Component.SupplierID) )
+    RaisError('You cannot delete this supplier. @XYZ has @Count related components' 16, 1);
+  End
+
+  delete from Supplier where SupplierID = 1
+ select * from supplier;
+ select * from Component;
