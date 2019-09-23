@@ -149,7 +149,7 @@ QouteID int not null ,
 Quantity int not null,
 TradePrice money not null,
 ListPrice money not null,
-TimeToFit time not null,
+TimeToFit decimal not null,
 
 constraint PK_QouteComponent
 primary key (ComponentID, QouteID),
@@ -164,7 +164,7 @@ foreign key (QouteID) references Qoute (QouteID)
 --on delete cascade
 --on update cascade
 ); --requires component
-
+drop table QouteComponent
 
 
 
