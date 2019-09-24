@@ -84,8 +84,8 @@ select * from Qoute;
 
 go
 
-
-alter Trigger trd_delete On Supplier
+drop trigger trd_delete
+alter Trigger trigSupplierDelete On Supplier
 instead of delete
 as
 --declare @SupplierName varchar(100)
@@ -93,7 +93,7 @@ as
 
 declare @SupplierName varchar(100)  = (Select ContactName from Contact c join deleted d on c.ContactID = d.SupplierID)
   declare @Counts int
-  set @Counts = (select count(Component.SupplierID) as [Count in Component] from Supplier left join Component on (Supplier.SupplierID = Component.SupplierID) )
+  set @Counts = (select count(Component.SupplierID) as [Count in Component] from Supplier left join Component on (Supplier.SupplierID = Component.SupplierID) join deleted on deleted.SupplierID = Supplier.SupplierID join Contact on Contact.ContactID = deleted.SupplierID)
   if (@Counts > 0) 
   raiserror( 'You cannot delete this supplier. %s has %i number of related components', 16, 1,  @SupplierName, @Counts)
   
