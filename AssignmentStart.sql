@@ -164,7 +164,7 @@ foreign key (QouteID) references Qoute (QouteID)
 --on delete cascade
 --on update cascade
 ); --requires component
-drop table QouteComponent
+--drop table QouteComponent
 
 
 

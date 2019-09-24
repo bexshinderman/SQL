@@ -1,6 +1,6 @@
 /* Question 1 */
 
-alter proc createCustomer( @CustomerID int output,
+create proc createCustomer( @CustomerID int output,
 							@Name varchar(100), 
 							@Phone varchar(30),
 							@Fax varchar(100) = "Not Applicable",
@@ -22,7 +22,7 @@ go
 /* question 2 */
 
 
-create proc createQoute(@QouteID int output, --first sp, all good in my books
+alter proc createQoute(@QouteID int output, --first sp, all good in my books
 						@QouteDescription varchar(500) = "N/A",
 						@QouteDate date = null,
 						@QoutePrice money,
@@ -42,7 +42,7 @@ end
 go
 
 
-alter proc addQouteComponent(@ComponentID int,@QouteID int, @Quantity int)
+create proc addQouteComponent(@ComponentID int,@QouteID int, @Quantity int)
 as -- because timetofit was a decimal and one data type I decided to forfit obtaining TimeToFit dynamically and thus added @TimeToFit as an input parameter.
 declare @ComponentID2 int
 set @ComponentID2 = @ComponentID
@@ -63,13 +63,14 @@ go
 
 
 set identity_insert Contact on
-exec createCustomer @CustomerID='109' , @Name='Bimble & Hat', @Phone ='4445555', @Email='guy..little@bh.biz.nz',@PostalAddress= '123 digit st Dunedin'
+exec createCustomer @CustomerID='110' , @Name='Bimble & Hat', @Phone ='4445555', @Email='guy.little@bh.biz.nz',@PostalAddress= '123 digit st Dunedin'
+exec createCustomer @CustomerID='111' , @Name='Hyperfont Modulator (International) Ltd.', @Phone ='42134359', @Email='sue@nz.hfm.com',@PostalAddress= '123 digit st Dunedin'
 set identity_insert Contact off
 go
 --identity k 
 set identity_insert Qoute on 
-exec createQoute @QouteID = 535, @QouteDescription = 'testing' , @QoutePrice = '$4', @QouteCompiler = 'Jenifer', @CustomerID = '104';
-exec addQouteComponent  @ComponentID =30903, @QouteID = 535, @Quantity = 100; 
+exec createQoute @QouteID = 501, @QouteDescription = 'Craypot frame' , @QoutePrice = '0.272', @QouteCompiler = 'Bex', @CustomerID = '110';
+exec addQouteComponent  @ComponentID =30903, @QouteID = 501, @Quantity = 1; 
 set identity_insert Qoute off
 
 
@@ -82,10 +83,9 @@ select * from Qoute;
 
 /*question 5 trigsupplierdelete */
 
-go
 
-drop trigger trd_delete
-alter Trigger trigSupplierDelete On Supplier
+
+create Trigger trigSupplierDelete On Supplier
 instead of delete
 as
 --declare @SupplierName varchar(100)
@@ -99,6 +99,12 @@ declare @SupplierName varchar(100)  = (Select ContactName from Contact c join de
   
  
 
-  delete from Supplier where SupplierID = 5
+  delete from Supplier where SupplierID = 3
  select * from Supplier;
  select * from Component;
+
+ /*create procedure updateAssemblyPrices()
+ begin
+ as
+
+declare @TradePrice select sum(TradePrice) from QouteComponent */
