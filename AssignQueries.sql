@@ -22,7 +22,7 @@ go
 /* question 2 */
 
 
-alter proc createQoute(@QouteID int output, --first sp, all good in my books
+create or alter proc createQoute(@QouteID int output, --first sp, all good in my books
 						@QouteDescription varchar(500) = "N/A",
 						@QouteDate date = null,
 						@QoutePrice money,
@@ -40,6 +40,7 @@ exec createQoute @QouteID = 32, @QouteDescription = 'i am a description',@QouteD
 set identity_insert Qoute off
 end
 go
+select * from customer;
 
 
 create proc addQouteComponent(@ComponentID int,@QouteID int, @Quantity int)
@@ -57,7 +58,8 @@ insert into  QouteComponent (ComponentID, QouteID, Quantity, TradePrice, ListPri
 values (@ComponentID, @QouteID, @Quantity, @TradePrice2, @ListPrice2, @TimeToFit2) 
 go	
 
-
+exec addQouteComponent(3091,22, 5)
+select * from Component;
 /* question 3 */
 --identity k
 
@@ -72,6 +74,9 @@ set identity_insert Qoute on
 exec createQoute @QouteID = 501, @QouteDescription = 'Craypot frame' , @QoutePrice = '0.272', @QouteCompiler = 'Bex', @CustomerID = '110';
 exec addQouteComponent  @ComponentID =30903, @QouteID = 501, @Quantity = 1; 
 set identity_insert Qoute off
+select * from Qoute;
+select * from QouteComponent
+
 
 
 
